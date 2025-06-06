@@ -19,97 +19,118 @@ interface Student {
   lastSubmission: string;
 }
 
+const defaultStudents: Student[] = [
+  {
+    id: "1",
+    name: "Emma Johnson",
+    email: "emma.johnson@school.edu",
+    totalScore: 475,
+    averageGrade: 95.0,
+    rank: 1,
+    previousRank: 2,
+    assignments: 5,
+    lastSubmission: "2 hours ago",
+  },
+  {
+    id: "2", 
+    name: "Liam Chen",
+    email: "liam.chen@school.edu",
+    totalScore: 460,
+    averageGrade: 92.0,
+    rank: 2,
+    previousRank: 1,
+    assignments: 5,
+    lastSubmission: "1 day ago",
+  },
+  {
+    id: "3",
+    name: "Sophia Rodriguez",
+    email: "sophia.rodriguez@school.edu", 
+    totalScore: 445,
+    averageGrade: 89.0,
+    rank: 3,
+    previousRank: 4,
+    assignments: 5,
+    lastSubmission: "3 hours ago",
+  },
+  {
+    id: "4",
+    name: "Noah Williams",
+    email: "noah.williams@school.edu",
+    totalScore: 430,
+    averageGrade: 86.0,
+    rank: 4,
+    previousRank: 3,
+    assignments: 5,
+    lastSubmission: "5 hours ago",
+  },
+  {
+    id: "5",
+    name: "Isabella Brown",
+    email: "isabella.brown@school.edu",
+    totalScore: 415,
+    averageGrade: 83.0,
+    rank: 5,
+    previousRank: 5,
+    assignments: 5,
+    lastSubmission: "1 day ago",
+  },
+  {
+    id: "6",
+    name: "James Davis",
+    email: "james.davis@school.edu", 
+    totalScore: 400,
+    averageGrade: 80.0,
+    rank: 6,
+    previousRank: 7,
+    assignments: 5,
+    lastSubmission: "2 days ago",
+  },
+  {
+    id: "7",
+    name: "Olivia Miller",
+    email: "olivia.miller@school.edu",
+    totalScore: 385,
+    averageGrade: 77.0,
+    rank: 7,
+    previousRank: 6,
+    assignments: 5,
+    lastSubmission: "1 day ago",
+  },
+  {
+    id: "8",
+    name: "Benjamin Wilson",
+    email: "benjamin.wilson@school.edu",
+    totalScore: 370,
+    averageGrade: 74.0,
+    rank: 8,
+    previousRank: 8,
+    assignments: 5,
+    lastSubmission: "3 days ago",
+  },
+];
+
 const Index = () => {
-  const [students, setStudents] = useState<Student[]>([
-    {
-      id: "1",
-      name: "Emma Johnson",
-      email: "emma.johnson@school.edu",
-      totalScore: 475,
-      averageGrade: 95.0,
-      rank: 1,
-      previousRank: 2,
-      assignments: 5,
-      lastSubmission: "2 hours ago",
-    },
-    {
-      id: "2", 
-      name: "Liam Chen",
-      email: "liam.chen@school.edu",
-      totalScore: 460,
-      averageGrade: 92.0,
-      rank: 2,
-      previousRank: 1,
-      assignments: 5,
-      lastSubmission: "1 day ago",
-    },
-    {
-      id: "3",
-      name: "Sophia Rodriguez",
-      email: "sophia.rodriguez@school.edu", 
-      totalScore: 445,
-      averageGrade: 89.0,
-      rank: 3,
-      previousRank: 4,
-      assignments: 5,
-      lastSubmission: "3 hours ago",
-    },
-    {
-      id: "4",
-      name: "Noah Williams",
-      email: "noah.williams@school.edu",
-      totalScore: 430,
-      averageGrade: 86.0,
-      rank: 4,
-      previousRank: 3,
-      assignments: 5,
-      lastSubmission: "5 hours ago",
-    },
-    {
-      id: "5",
-      name: "Isabella Brown",
-      email: "isabella.brown@school.edu",
-      totalScore: 415,
-      averageGrade: 83.0,
-      rank: 5,
-      previousRank: 5,
-      assignments: 5,
-      lastSubmission: "1 day ago",
-    },
-    {
-      id: "6",
-      name: "James Davis",
-      email: "james.davis@school.edu", 
-      totalScore: 400,
-      averageGrade: 80.0,
-      rank: 6,
-      previousRank: 7,
-      assignments: 5,
-      lastSubmission: "2 days ago",
-    },
-    {
-      id: "7",
-      name: "Olivia Miller",
-      email: "olivia.miller@school.edu",
-      totalScore: 385,
-      averageGrade: 77.0,
-      rank: 7,
-      previousRank: 6,
-      assignments: 5,
-      lastSubmission: "1 day ago",
-    },
-    {
-      id: "8",
-      name: "Benjamin Wilson",
-      email: "benjamin.wilson@school.edu",
-      totalScore: 370,
-      averageGrade: 74.0,
-      rank: 8,
-      previousRank: 8,
-      assignments: 5,
-      lastSubmission: "3 days ago",
-    },
-  ]);
+  const [students, setStudents] = useState<Student[]>([]);
+
+  // Load students from localStorage on component mount
+  useEffect(() => {
+    const savedStudents = localStorage.getItem('virtualClassroomStudents');
+    if (savedStudents) {
+      setStudents(JSON.parse(savedStudents));
+    } else {
+      // If no saved data, use default students
+      setStudents(defaultStudents);
+      localStorage.setItem('virtualClassroomStudents', JSON.stringify(defaultStudents));
+    }
+  }, []);
+
+  // Save students to localStorage whenever students state changes
+  useEffect(() => {
+    if (students.length > 0) {
+      localStorage.setItem('virtualClassroomStudents', JSON.stringify(students));
+    }
+  }, [students]);
 
   const handleSubmitGrade = (studentId: string, assignmentName: string, score: number) => {
     setStudents(prevStudents => {
